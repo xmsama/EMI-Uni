@@ -1,0 +1,15 @@
+{
+  "dependencies": {
+    "dayjs": "^1.11.6",
+    "uview-plus": "^3.1.16"
+  },
+  "devDependencies": {
+    "eslint": "^8.27.0",
+    "eslint-config-google": "^0.14.0",
+    "eslint-plugin-vue": "^9.7.0"
+  },
+  "scripts":
+  {
+    "serve": "node vite --host --mode development"
+  }
+}
