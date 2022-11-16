@@ -5,9 +5,29 @@
 			"style": {
 				"navigationBarTitleText": "芜湖快递"
 			}
+		},
+		{
+			"path": "pages/login/login",
+			"style": {
+				"navigationBarTitleText": "用户登录"
+			}
 		}
-	],
-	
+	    ,{
+            "path" : "pages/sendpack/send",
+            "style" :                                                                                    
+            {
+                "navigationBarTitleText": "寄快递",
+                "enablePullDownRefresh": false
+            }
+            
+        }
+    ],
+	"easycom": {
+		"autoscan": true,
+		"custom": {
+			"fui-(.*)": "firstui-uni/firstui/fui-$1/fui-$1.vue"
+		}
+	},
 	"globalStyle": {
 		"navigationBarTextStyle": "black",
 		"navigationBarTitleText": "uni-app",

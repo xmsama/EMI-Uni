@@ -17,26 +17,47 @@
     <view class="nav-wrap">
         <u-row class="base-list">
             <u-col span="6" style='text-align: center;'>
-                寄快递
-                <p>一小时内取件</p>
+                <u-row >
+                				<ul-col span="6" @click="ji">
+                					 <p  style='font-size:18px;font-weight: 700; text-align: left;padding-left:1em'>寄快递</p>
+                					<p style='font-size:10px;margin-left:2em'>一小时内取件</p>
+                				</ul-col>
+                <ul-col span="6">
+                	 <p style="margin-left: 20px;float:right">
+						 <u--image :showLoading="true" height="40px" src="/static/ji.png" width="40px"></u--image>
+						 </p>
+                </ul-col>
+                </u-row >
 
             </u-col>
             <u-line direction="col"></u-line>
             <u-col span="6">
-                <p  style='font-weight: 500; text-align: left;padding-left:1em'>扫码寄件</p>
-                <p>二维码下单/查件</p>
-				
-				<!-- <u--image :showLoading="true" height="40px" src="/static/ji.png" width="40px"></u--image> -->
+				<u-row >
+				<ul-col span="6">
+					 <p  style='font-size:18px;font-weight: 700; text-align: left;padding-left:1.5em'>扫码寄件</p>
+					<p style='font-size:10px;margin-left:2.5em'>二维码下单/查件</p>
+				</ul-col>
+               <ul-col span="6">
+               	 <p style="margin-left: 15px;float:right"><u--image :showLoading="true" height="40px" src="/static/qrcode.png" width="40px"></u--image></p>
+               </ul-col>
+			   </u-row >
+				<!-- <p style="float:right"><u--image :showLoading="true" height="40px" src="/static/ji.png" width="40px"></u--image></p> -->
+
             </u-col>
 
         </u-row>
     </view>
+	<view class="nav-wrap">
+	<u-row class="banner-card">
+		 <u-notice-bar icon='' color='black' bgColor='#' :text="notice" speed="100" ></u-notice-bar>
+		</u-row>
 
+	</view>
 
     <view class="grid-list">
-        <u-row>
+        <!-- <u-row :gutter="20">
             <u-col span="6">
-                <view style="height:5em; center;background-color:rgba(204, 204, 204,0.1);border-radius: 1em">
+                <view style="height:5em; center;background-color:rgba(204, 204, 204,0.2);border-radius: 1em">
                     <view class="text" style='padding:1em;margin-left:1px;'>
                         <p style='font-weight:600;text-align:left'>寄大件</p>
                         <p style='margin-top:5px;font-weight:100;text-align:left'>20吨以上免费</p>
@@ -47,9 +68,42 @@
                     <view class="icon"></view>
                 </view>
             </u-col>
-            <u-col customStyle="text-align: center;" span="6">124563
+            <u-col  span="6">
+				<view style="height:5em; center;background-color:rgba(204, 204, 204,0.2);border-radius: 1em">
+				    <view class="text" style='padding:1em;margin-left:1px;'>
+				        <p style='font-weight:600;text-align:left'>寄大件</p>
+				        <p style='margin-top:5px;font-weight:100;text-align:left'>20吨以上免费</p>
+				        <p style='float:right;margin-top: -40px;: relative;'>
+				            <u--image :showLoading="true" height="40px" src="/static/ji.png" width="40px"></u--image>
+				        </p>
+				    </view>
+				    <view class="icon"></view>
+				</view>
             </u-col>
-        </u-row>
+        </u-row> -->
+
+
+
+		<u-row customStyle="margin-bottom: 20px" :gutter="20"
+			v-for="(griditem,index) in gridlist"
+			:key="index">
+		    <u-col span="6" v-for="(item,colindex) in griditem.child" :key="colindex" @click='routergrid(item.name)'>
+		        <view style="height:5em; center;background-color:rgba(204, 204, 204,0.2);border-radius: 1em">
+		            <view class="text" style='padding:1.2em 0.5em 1em 1.2em;margin-left:1px;'>
+		                <p style='font-weight:600;text-align:left'>{{item.name}}</p>
+		                <p style='margin-top:5px;font-size:11px;font-weight:100;text-align:left'>{{item.description}}</p>
+		                <p style='float:right;margin-top: -40px;margin-left:1em;'>
+		                    <u--image :showLoading="true" height="40px" :src="item.image" width="40px"></u--image>
+		                </p>
+		            </view>
+		            <view class="icon"></view>
+		        </view>
+		    </u-col>
+
+		</u-row>
+
+
+
     </view>
 
     <u-tabbar
@@ -69,12 +123,43 @@
 
 <script setup>
 import {ref} from 'vue'
-
+import { useRouter } from 'vue-router'
+const router = useRouter()
 const bannerlist = [
     'https://cdn.uviewui.com/uview/swiper/swiper1.png',
     'https://cdn.uviewui.com/uview/swiper/swiper2.png',
     'https://cdn.uviewui.com/uview/swiper/swiper3.png',
 ]
+
+const routergrid=(val)=>
+{
+    console.log(val)
+    if(val=="寄大件")
+    {
+        uni.$u.route({
+
+            url: '/pages/login/login',
+            params: {
+                name: 'lisa'
+            }
+        })
+
+    }
+
+}
+
+const ji=()=>
+{
+    uni.$u.route({
+
+        url: '/pages/sendpack/send',
+        params: {
+            name: 'lisa'
+        }
+    })
+}
+
+const notice="我是一条公告我是一条公告我是一条公告我是一条公告我是一条公告我是一条公告我是一条公告我是一条公告我是一条公告我是一条公告我是一条公告"
 const tablist = [{
     name: '寄内地',
 }, {
@@ -86,6 +171,26 @@ const changetab = (val) => {
     console.log(val)
     value6.value = val
 }
+
+const gridlist=[
+	{
+		"index":1,
+		child:[
+			{"name":"寄大件","description":"20吨以上免费","image":"/static/dajian.png"},
+			{"name":"同城急送","description":"平均一小时送全城","image":"/static/tc.png"}
+		]
+	},
+	{
+		"index":2,
+		child:[
+			{"name":"网点自寄","description":"去芜湖网点自寄","image":"/static/ji.png"},
+			{"name":"待收货款","description":"放心发货 代您收钱","image":"/static/ji.png"},
+			{"name":"666","description":"描述1"}
+		]
+	}
+]
+
+
 
 const list = [{
     name: 'photo',
@@ -134,6 +239,16 @@ const title = ''
 </script>
  -->
 <style>
+.banner-card
+{
+	padding: 10px;
+	position: relative;
+	border-radius: 1em;
+	height:1.5em;
+	background: linear-gradient(to right, rgba(255,0,0,0.3) , rgba(255,0,0,0.2), rgba(255,0,0,0.3));
+	/* box-shadow: 0 2px 12px 0 rgb(0 0 0 / 10%); */
+}
+
 .base-list {
     padding: 10px;
     position: relative;

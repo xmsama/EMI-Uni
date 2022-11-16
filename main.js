@@ -15,11 +15,13 @@ app.$mount()
 
 // #ifdef VUE3
 import uviewPlus from '@/uni_modules/uview-plus'
-
+import ElementPlus from 'element-plus'
+import 'element-plus/dist/index.css'
 import { createSSRApp } from 'vue'
 export function createApp() {
   const app = createSSRApp(App)
   app.use(uviewPlus)
+  app.use(ElementPlus)
   return {
     app
   }
