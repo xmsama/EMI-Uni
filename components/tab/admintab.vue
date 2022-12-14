@@ -26,7 +26,13 @@ const changetab = (val) => {
     if(val==0)
     {
         uni.reLaunch({
-            url: '/pages/index/index'
+            url: '/pages/admin/index/index'
+        })
+    }
+    else if(val==1)
+    {
+        uni.reLaunch({
+            url: '/pages/admin/edit/edit'
         })
     }else if(val==2)
     {

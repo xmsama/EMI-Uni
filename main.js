@@ -15,7 +15,6 @@ app.$mount()
 
 // #ifdef VUE3
 import uviewPlus from '@/uni_modules/uview-plus'
-import 'element-plus/dist/index.css'
 import { createSSRApp } from 'vue'
 export function createApp() {
   const app = createSSRApp(App)
