@@ -11,12 +11,57 @@
 			"style": {
 				"navigationBarTitleText": "用户登录"
 			}
-		}
-	    ,{
+		},
+		{
             "path" : "pages/sendpack/send",
             "style" :                                                                                    
             {
                 "navigationBarTitleText": "寄快递",
+                "enablePullDownRefresh": false
+            }
+            
+        },
+		{
+            "path" : "pages/my/my",
+            "style" :                                                                                    
+            {
+                "navigationBarTitleText": "",
+                "enablePullDownRefresh": false
+            }
+            
+        },
+		{
+            "path" : "pages/query/query",
+            "style" :                                                                                    
+            {
+                "navigationBarTitleText": "查快递",
+                "enablePullDownRefresh": false
+            }
+            
+        }
+        ,{
+            "path" : "pages/admin/index/index",
+            "style" :                                                                                    
+            {
+                "navigationBarTitleText": "管理员后台",
+                "enablePullDownRefresh": false
+            }
+            
+        },
+		{
+		    "path" : "pages/admin/setting/setting",
+		    "style" :                                                                                    
+		    {
+		        "navigationBarTitleText": "配置修改",
+		        "enablePullDownRefresh": false
+		    }
+		    
+		}
+        ,{
+            "path" : "pages/admin/edit/edit",
+            "style" :                                                                                    
+            {
+                "navigationBarTitleText": "",
                 "enablePullDownRefresh": false
             }
             

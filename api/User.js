@@ -1,9 +1,10 @@
 import service from '@/utils/request'
 
 
-export const Login = () => {
+export const Login = (data) => {
     return service({
-        url: '/getMenu',
-        method: 'post'
+        url: '/customerUser/user/login',
+        method: 'post',
+        data:data
     })
 }

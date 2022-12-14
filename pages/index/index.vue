@@ -24,7 +24,7 @@
                 				</ul-col>
                 <ul-col span="6">
                 	 <p style="margin-left: 20px;float:right">
-						 <u--image :showLoading="true" height="40px" src="/static/ji.png" width="40px"></u--image>
+						 <u--image :showLoading="true" height="40px" src="/static/ji.png" @click="ji" width="40px"></u--image>
 						 </p>
                 </ul-col>
                 </u-row >
@@ -106,22 +106,12 @@
 
     </view>
 
-    <u-tabbar
-        :fixed="true"
-        :placeholder="true"
-        :safeAreaInsetBottom="true"
-        :value="value6"
-        @change="changetab"
-    >
-        <u-tabbar-item icon="home" text="寄快递"></u-tabbar-item>
-        <u-tabbar-item icon="photo" text="查快递"></u-tabbar-item>
-        <u-tabbar-item icon="play-right" text="广告位"></u-tabbar-item>
-        <u-tabbar-item icon="account" text="我的"></u-tabbar-item>
-    </u-tabbar>
+    <tab :current="0"></tab>
 
 </template>
 
 <script setup>
+import Tab from "../../components/tab/tab";
 import {ref} from 'vue'
 import { useRouter } from 'vue-router'
 const router = useRouter()
@@ -130,32 +120,29 @@ const bannerlist = [
     'https://cdn.uviewui.com/uview/swiper/swiper2.png',
     'https://cdn.uviewui.com/uview/swiper/swiper3.png',
 ]
-
-const routergrid=(val)=>
-{
-    console.log(val)
-    if(val=="寄大件")
-    {
-        uni.$u.route({
-
-            url: '/pages/login/login',
-            params: {
-                name: 'lisa'
-            }
-        })
-
-    }
-
-}
+//
+// const routergrid=(val)=>
+// {
+//     console.log(val)
+//     if(val=="寄大件")
+//     {
+//         uni.$u.route({
+//
+//             url: '/pages/login/login',
+//             params: {
+//                 name: 'lisa'
+//             }
+//         })
+//
+//     }
+//
+// }
 
 const ji=()=>
 {
     uni.$u.route({
-
+        type:"reLaunch",
         url: '/pages/sendpack/send',
-        params: {
-            name: 'lisa'
-        }
     })
 }
 
@@ -167,10 +154,7 @@ const tablist = [{
 }
 ]
 const value6 = ref(0)
-const changetab = (val) => {
-    console.log(val)
-    value6.value = val
-}
+
 
 const gridlist=[
 	{
@@ -184,8 +168,8 @@ const gridlist=[
 		"index":2,
 		child:[
 			{"name":"网点自寄","description":"去芜湖网点自寄","image":"/static/ji.png"},
-			{"name":"待收货款","description":"放心发货 代您收钱","image":"/static/ji.png"},
-			{"name":"666","description":"描述1"}
+			{"name":"代收货款","description":"放心发货 代您收钱","image":"/static/ji.png"},
+
 		]
 	}
 ]
@@ -221,23 +205,6 @@ const list = [{
 const title = ''
 </script>
 
-<!--
-<script>
-	export default {
-		data() {
-			return {
-				title: 'Hello'
-			}
-		},
-		onLoad() {
-
-		},
-		methods: {
-
-		}
-	}
-</script>
- -->
 <style>
 .banner-card
 {
