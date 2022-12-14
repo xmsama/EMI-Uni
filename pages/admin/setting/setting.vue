@@ -31,7 +31,7 @@ import {ref} from "vue";
 const show = ref(false)
 const fukuan=ref(0)
 const  columns=[
-    ['寄付现结', '到付', '霸王单']
+    ['A', 'B', 'C']
 ]
 
 
