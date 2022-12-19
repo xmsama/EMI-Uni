@@ -38,6 +38,15 @@
                 "enablePullDownRefresh": false
             }
             
+        },
+		{
+            "path" : "pages/info/info",
+            "style" :                                                                                    
+            {
+                "navigationBarTitleText": "快递详情",
+                "enablePullDownRefresh": false
+            }
+            
         }
         ,{
             "path" : "pages/admin/index/index",

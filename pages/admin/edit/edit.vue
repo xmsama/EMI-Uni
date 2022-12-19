@@ -3,24 +3,32 @@
 
         <view class="fui-page__bd">
 
-            <view class="fui-section__title">添加站点</view>
-            <fui-input :padding="['20rpx','32rpx']" label="添加站点" clearable :bottomLeft="0" placeholder="输入站点名称">
-                <fui-button type="gray" bold width="200rpx" height="64rpx" :size="28" text="添加"></fui-button>
+            <view class="fui-section__title">快递编辑</view>
+            <fui-input :padding="['20rpx','32rpx']" label="快递单号" clearable :bottomLeft="0" placeholder="输入运单号">
+                <fui-button type="gray" bold width="200rpx" height="64rpx" :size="28" text="查询"></fui-button>
             </fui-input>
 
-            <view class="fui-section__title">编辑站点</view>
+            <view class="fui-section__title">编辑快递</view>
             <fui-list-cell :highlight="false">
                 <view class="fui-list__cell fui-flex__center" @click="show = true">
-                    选择站点
+                    编辑类型
                     <u-icon style="display: inline-block;" name="arrow-right" color="#939090" ></u-icon>
-                    {{columns[0][fukuan]}}
-                    <!--                            <span>{{columns[0][fukuan]}} </span><span style="font-weight: 800"> ></span>-->
-                    <u-picker :show="show" :columns="columns" @confirm="confirmfukuan" @cancel="cancelfukuan"> </u-picker>
+                    {{columns[0][editype]}}
+                    <u-picker :show="show" :columns="columns" @confirm="confirmedit" @cancel="canceledit"> </u-picker>
+
                 </view>
+
             </fui-list-cell>
 
-        </view>
+
+            <fui-input :padding="['20rpx','32rpx']" :label="TypeText" clearable :bottomLeft="0" placeholder="">
+                <fui-button type="gray" bold width="200rpx" height="64rpx" :size="28" text="提交"></fui-button>
+            </fui-input>
+
     </view>
+
+        </view>
+
     <admintab :current="1"></admintab>
 
 </template>
@@ -28,14 +36,15 @@
 <script setup>
 import Admintab from "../../../components/tab/admintab";
 import {ref} from "vue";
+const TypeText=ref("")
 const show = ref(false)
-const fukuan=ref(0)
+const editype=ref(0)
 const  columns=[
-    ['寄付现结', '到付', '霸王单']
+    ['拒绝揽收', '同意揽收', '站点收入',"运往下一个站点","异常","派件中","签收"]
 ]
 
 
-const cancelfukuan =(val)=>
+const canceledit =(val)=>
 {
 
     show.value=false
@@ -50,9 +59,9 @@ import fuiIcon from "@/components/firstui/fui-icon/fui-icon.vue"
 // console.log(ddref.show())
 
 
-const confirmfukuan=(val)=>
+const confirmedit=(val)=>
 {
-    fukuan.value=val.indexs[0]
+    editype.value=val.indexs[0]
 
     show.value=false
 }

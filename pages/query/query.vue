@@ -10,32 +10,32 @@
                 </template>
             </fui-input>
             <view class='nav-tabs'>
-                <u-tabs :list="tablist" @click="click"></u-tabs>
+                <u-tabs :list="tablist" @click="tabclick"></u-tabs>
             </view>
             <!--            <fui-input  isFillet inputBorder placeholder="请输入文本"></fui-input>-->
         </view>
         <br>
-        <view class="packlist">
-            <view class="base-list">
+        <view v-for="(item,index) in table" class="packlist">
+            <view class="base-list" @click="RouteInfo(item.expressId)">
                 <u-row>
-                    <u-col style="margin:1em 0 0 1em;font-size:15px;color:gray">运单号：12312312312312312</u-col>
+                    <u-col style="margin:1em 0 0 1em;font-size:15px;color:gray">运单号：{{item.expressId}}</u-col>
                 </u-row>
                 <u-row>
-                    <u-col style="margin:1em 0 0 2em" :span="4">
-                        <span style="font-weight: 800">默认寄件人</span>
-                    <p>1341213...</p>
+                    <u-col style="margin:1em 0 0 1em" :span="3">
+                        <span style="font-weight: 800;text-align: center">{{item.senderName}}</span>
+                    <p>{{item.senderPhone}}</p>
                     </u-col>
-                    <u-col :span="3" style="margin:1em 0 0 0;font-weight: 800">
-                        <span>已签收 </span>
-                        <p style="margin-left: 1em"><fui-icon name="receive" :size="30"/></p>
+                    <u-col :span="4" style="margin:1em 0 0 0;font-weight: 800">
+                        <span style="text-align: center;margin-left: 1em;"> {{Status[item.status]}} </span>
+                        <p style="margin-left: 1em;text-align: center"><fui-icon name="receive" :size="30"/></p>
                     </u-col>
                     <u-col style="margin:1em 0 0 1em" :span="4">
-                        <span style="font-weight: 800">默认寄件人</span>
-                        <p>1341233...</p></u-col>
+                        <span style="font-weight: 800;text-align:center">{{item.addresseeName}}</span>
+                        <p>{{item.addresseePhone}}</p></u-col>
 
                 </u-row>
 
-                <u-row style="padding:2em 0 0 1em">更新时间：2012-55-55 11:22:33</u-row>
+                <u-row style="padding:2em 0 0 1em">创建时间：{{item.createTime}}</u-row>
             </view>
 <!--            <u-row class="base-list">-->
 <!--                <u-col span="5" style='text-align: center;'>-->
@@ -79,25 +79,56 @@
 import fuiInput from "@/components/firstui/fui-input/fui-input.vue"
 import fuiIcon from "@/components/firstui/fui-icon/fui-icon.vue"
 import UCol from "../../uni_modules/uview-plus/components/u-col/u-col";
+import {GetEmi} from "../../api/User";
+import {ref} from "vue";
+
+const table = ref("")
+
+const Status = {
+    "0": '拒绝接单',
+    "1": '等待揽收',
+    "2": '站点收入',
+    "3": '运送中',
+    "4": '异常',
+    "5": '派件中',
+    "6": '签收'
+};
+
 const tablist = [{
     name: '寄件',
 }, {
     name: '收件',
 }
 ]
+
+const RouteInfo=(num)=>
+{
+    uni.$u.route({
+        type:"redirect",
+        url: '/pages/info/info?id='+num,
+
+    })
+}
+
+const tabclick=async(index,item)=>{
+    const resp=await GetEmi({"type":index.index,"page":1,"size":5})//寄件
+    table.value=resp.data
+    // console.log("被点了",index.index)
+}
+const initdata = async()=>{
+    const resp=await GetEmi({"type":0,"page":1,"size":5})//收件
+    table.value=resp.data
+    console.log(resp.data)
+}
+
+initdata()
+
+
+
+
+
+
 </script>
-<!--<script>-->
-<!--	export default {-->
-<!--		data() {-->
-<!--			return {-->
-<!--				-->
-<!--			}-->
-<!--		},-->
-<!--		methods: {-->
-<!--			-->
-<!--		}-->
-<!--	}-->
-<!--</script>-->
 
 <style>
 

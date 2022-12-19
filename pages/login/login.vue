@@ -10,6 +10,7 @@
             <view>&nbsp;</view>
 <!--            <u-button  @tap="submit" type="warning" text="登录" size="large"></u-button>-->
             <fui-button  @tap="login" type="primary">登录</fui-button>
+            <fui-button  @tap="loginadmin" type="warning">管理员登录</fui-button>
 <!--			<button @tap="submit"  type='warning' class="getCaptcha">登录</button>-->
 			<view class="alternative">
 				<view class="password">验证码登录</view>
@@ -41,7 +42,7 @@
 <script setup>
 import fuiButton from "@/components/firstui/fui-button/fui-button.vue"
 import fuiToast from "@/components/firstui/fui-toast/fui-toast.vue"
-import { Login } from '/api/User.js'
+import {Login, LoginAdmin} from '/api/User.js'
 import {ref} from 'vue'
 const Toast = ref(null)
 let username=localStorage.getItem("username")
@@ -55,11 +56,30 @@ const loginform=ref({
     account:'13311111111',
     password:''
 })
+
+
+
+
+const loginadmin =async()=>
+{
+    let options = {}
+    const resp=await LoginAdmin({account:"admin",password:"123"})
+    console.log(resp)
+    if (resp.code==200){
+        options.text = '登录成功';
+        Toast.value.show(options)
+        localStorage.setItem("token",resp.data.token)
+        localStorage.setItem("username",resp.data.user.account)
+        uni.reLaunch({
+            url: '/pages/my/my'
+        });
+    }
+}
 const login=async()=>
 {
     //正则验证手机号
     let options = {}
-    console.log(loginform.value.account)
+    // console.log(loginform.value.account)
     if(!uni.$u.test.mobile(loginform.value.account))
     {
         //提示信息
@@ -68,20 +88,52 @@ const login=async()=>
 
     }else
     {
-        // const resp=await Login({...loginform.value})
-        // console.log(resp)
-        const resp={code:0,
-        username:"testname"}
-        if (resp.code==0)
-        {
-            options.text = '登录成功';
-            Toast.value.show(options)
-            localStorage.setItem("username",resp.username) //哎呀 登录成功了
-            uni.reLaunch({
-                url: '/pages/my/my'
-            });
 
+        if(loginform.value.password=="")
+        {
+            options.text = '请输入密码';
+            Toast.value.show(options)
         }
+        const resp=await Login({...loginform.value})
+        console.log(resp.data)
+        if (resp.data.code==1002)
+        {
+            options.text = '输入的信息不正确';
+            Toast.value.show(options)
+        }else if(resp.code==200)
+        {
+            console.log(resp.data)
+            if(resp.data.user!=undefined)
+            {
+                options.text = '登录成功';
+                Toast.value.show(options)
+                localStorage.setItem("token",resp.data.token)
+                localStorage.setItem("username",resp.data.user.name)
+                uni.reLaunch({
+                    url: '/pages/my/my'
+                });
+                //登录成功
+            }else {
+                options.text = '新用户 已自动注册 请重新点击登录';
+                Toast.value.show(options)
+            }
+        }else if(resp.data.code==2)
+        {
+            options.text = '密码错误';
+            Toast.value.show(options)
+        }
+        // const resp={code:0,
+        // username:"testname"}
+        // if (resp.code==0)
+        // {
+        //     options.text = '登录成功';
+        //     Toast.value.show(options)
+        //     localStorage.setItem("username",resp.username) //哎呀 登录成功了
+        //     uni.reLaunch({
+        //         url: '/pages/my/my'
+        //     });
+        //
+        // }
     }
 
 

@@ -14,7 +14,7 @@
               </view>
           </u-col>
             <u-col :span="3">
-                <u-button text="签到"  v-show="!showlogin" type="primary" shape="circle"></u-button>
+                <u-button text="登出"  v-show="!showlogin" @tap="logout" type="primary" shape="circle"></u-button>
             </u-col>
         </u-row>
 
@@ -85,7 +85,11 @@ const RouteLogin =()=>{
     })
 }
 
-
+const logout=()=>
+{
+    localStorage.clear()
+    RouteLogin()
+}
 
 const baseList=ref([{
         name: 'photo',

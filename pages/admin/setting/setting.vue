@@ -4,9 +4,10 @@
         <view class="fui-page__bd">
 
             <view class="fui-section__title">添加站点</view>
-            <fui-input :padding="['20rpx','32rpx']" label="添加站点" clearable :bottomLeft="0" placeholder="输入站点名称">
-                <fui-button type="gray" bold width="200rpx" height="64rpx" :size="28" text="添加"></fui-button>
+            <fui-input :padding="['20rpx','32rpx']" label="添加站点" v-model="addname" clearable :bottomLeft="0" placeholder="输入站点名称">
+                <fui-button type="gray" bold width="200rpx" height="64rpx" :size="28"  @click="addsite" text="添加"></fui-button>
             </fui-input>
+
 
             <view class="fui-section__title">编辑站点</view>
             <fui-list-cell :highlight="false">
@@ -14,38 +15,103 @@
                     选择站点
                     <u-icon style="display: inline-block;" name="arrow-right" color="#939090" ></u-icon>
                     {{columns[0][fukuan]}}
-                    <!--                            <span>{{columns[0][fukuan]}} </span><span style="font-weight: 800"> ></span>-->
+
                     <u-picker :show="show" :columns="columns" @confirm="confirmfukuan" @cancel="cancelfukuan"> </u-picker>
+<!--                    <fui-button type="gray" bold width="200rpx" height="64rpx" :size="28" text="添加"></fui-button>-->
                 </view>
+
+
             </fui-list-cell>
 
+            <fui-input :padding="['20rpx','32rpx']" label="编辑名称" v-model="editname" clearable :bottomLeft="0" placeholder="输入站点名称">
+                <fui-button type="gray" bold width="100rpx" height="64rpx" :size="14"  @click="editsite" text="编辑"></fui-button>
+                <fui-button type="gray" bold width="100rpx" height="64rpx" :size="14"  @click="delsite" text="删除"></fui-button>
+            </fui-input>
         </view>
+        <fui-toast ref="Toast"></fui-toast>
     </view>
+
     <admintab :current="2"></admintab>
 
 </template>
 
 <script setup>
+import fuiToast from "@/components/firstui/fui-toast/fui-toast.vue"
 import Admintab from "../../../components/tab/admintab";
+import fuiDropdownMenu from "@/components/firstui/fui-dropdown-menu/fui-dropdown-menu.vue"
+import fuiListCell from "@/components/firstui/fui-list-cell/fui-list-cell.vue"
+import fuiInput from "@/components/firstui/fui-input/fui-input.vue"
+import fuiButton from "@/components/firstui/fui-button/fui-button.vue"
+import fuiIcon from "@/components/firstui/fui-icon/fui-icon.vue"
+import {AddSite, DelSite, GetSite, UpdateSite} from "../../../api/User";
 import {ref} from "vue";
 const show = ref(false)
 const fukuan=ref(0)
-const  columns=[
-    ['A', 'B', 'C']
-]
+const Toast = ref(null)
+const addname=ref('')
+const editname=ref('')
+const IDList=ref({})
+let options = {}
+const addsite=async()=>{
+
+    const resp=await AddSite({stationName: addname.value})
+    if(resp.code==200){
+
+        //提示信息
+        options.text = '添加成功';
+        Toast.value.show(options)
+        await init()
+    }
+}
+
+const delsite=async()=>{
+
+    const resp=await DelSite(IDList.value[columns.value[0][fukuan.value]])
+    if (resp.code==200){
+        options.text = '删除成功';
+        Toast.value.show(options)
+        await init()
+    }
+}
+const editsite=async()=>{
+    const resp=await UpdateSite({expressId:IDList.value[columns.value[0][fukuan.value]],stationName:editname.value})
+    if (resp.code==200){
+        options.text = '修改成功';
+        Toast.value.show(options)
+        await init()
+    }
+}
 
 
+
+
+
+const columns=ref([
+    ['中国', '美国', '日本']
+])
+const init=async()=>{
+    const resp=await GetSite()
+    // console.log("res:",resp)
+    let temp=Array()
+    for(let i=0;i<resp.data.length;i++) {
+
+        IDList.value[resp.data[i].stationName]=resp.data[i].expressId
+        temp.push(resp.data[i].stationName)
+    }
+    console.log(IDList.value)
+    columns.value[0]=temp
+    // console.log(columns)
+
+
+    // columns.value=await GetSite()
+}
+init()
 const cancelfukuan =(val)=>
 {
 
     show.value=false
 }
-import fuiDropdownMenu from "@/components/firstui/fui-dropdown-menu/fui-dropdown-menu.vue"
-import fuiListCell from "@/components/firstui/fui-list-cell/fui-list-cell.vue"
 
-import fuiInput from "@/components/firstui/fui-input/fui-input.vue"
-import fuiButton from "@/components/firstui/fui-button/fui-button.vue"
-import fuiIcon from "@/components/firstui/fui-icon/fui-icon.vue"
 // dref.show()
 // console.log(ddref.show())
 
@@ -53,7 +119,6 @@ import fuiIcon from "@/components/firstui/fui-icon/fui-icon.vue"
 const confirmfukuan=(val)=>
 {
     fukuan.value=val.indexs[0]
-
     show.value=false
 }
 

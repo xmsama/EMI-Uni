@@ -10,7 +10,7 @@
                         <u-col :span="10" :offset="1">
                             <p><span style="font-weight: 800">默认寄件人</span><span style="font-weight: 500"> 13412345678</span></p>
                             <p class="addressinfo" style="font-size:15px">
-                            <u--textarea  border="bottom" v-model="packform.sendaddress" placeholder="请输入地址" ></u--textarea>
+                            <u--textarea  border="bottom" v-model="packform.senderAddress" placeholder="请输入地址" ></u--textarea>
                             </p>
                         </u-col>
                     </u-row>
@@ -25,7 +25,7 @@
                         <u-col :span="10">
                             <p><span style="font-weight: 800">默认收件人</span><span style="font-weight: 500"> 13587654321</span></p>
                             <p class="addressinfo" style="font-size:15px">
-                                <u--textarea  border="bottom" v-model="packform.reciveaddress" placeholder="请输入地址" ></u--textarea>
+                                <u--textarea  border="bottom" v-model="packform.addresseeAddress" placeholder="请输入地址" ></u--textarea>
                             </p>
                         </u-col>
 
@@ -133,6 +133,7 @@
             </u-row>
 
         </view>
+      <fui-toast ref="Toast"></fui-toast>
 	</view>
 
 </template>
@@ -142,7 +143,9 @@
 
 import {ref} from "vue";
 import fuiButton from "@/components/firstui/fui-button/fui-button.vue"
-
+import fuiToast from "@/components/firstui/fui-toast/fui-toast.vue"
+import {Send} from "../../api/User";
+const Toast = ref(null)
 //登录态检测
 let username=localStorage.getItem("username")
 if (username=="" ||username==undefined){
@@ -152,13 +155,15 @@ if (username=="" ||username==undefined){
     })
 }
 const packform=ref({
-    sendname:"默认寄件人",
-    sendphone:"13412345678",
-    sendaddress:'',
-    recivename:"默认收件人",
-    recivephone:"13587654321",
-    reciveaddress:''
+    senderName:"默认寄件人",
+    senderPhone:"13412345678",
+    senderAddress:'',
+    addresseeName:"默认收件人",
+    addresseePhone:"13587654321",
+    addresseeAddress:''
 })
+
+
 const show = ref(false)
 const fukuan=ref(0)
 const encryptmsg=ref(false)
@@ -174,10 +179,23 @@ const confirmfukuan=(val)=>
     show.value=false
 }
 
-
+const RouteQuery=()=>{
+    uni.reLaunch({
+        url: '/pages/query/query'
+    });
+}
 
 const sendpack=async ()=>{
-    console.log("fucking crazy")
+    // {"message":"操作成功","code":200,"data":null}
+    const resp=await Send({"deliveryMessage":"","expressNotes":"","expressNumber":"","price":999999,"senderName":"","weight":0,...packform.value})
+    // console.log("fucking crazy")
+    let options={}
+    if (resp.code==200){
+
+        options.text = '下单成功';
+        Toast.value.show(options)
+        setTimeout(RouteQuery, 2000);
+    }
 }
 
 
