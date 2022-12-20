@@ -12,6 +12,13 @@
 
 <script setup>
 import Admintab from "../../../components/tab/admintab";
+import {GetInfo} from "../../../api/User";
+
+const init =async()=>{
+    const resp=await GetInfo()
+    console.log(resp)
+}
+init()
 </script>
 
 <style>

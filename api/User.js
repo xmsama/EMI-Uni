@@ -64,6 +64,42 @@ export const UpdateSite = (data) => {
     })
 }
 
+export const QueryEmi = (data) => {
+    return service({
+        url: 'customerUser/user/checkOneById',
+        method: 'post',
+        data:data
+    })
+}
+export const AcceptEmi = (data) => {
+    return service({
+        url: 'admin/adminUser/auth_access/1',
+        method: 'post',
+        data:data
+    })
+}
+export const UnAcceptEmi = (data) => {
+    return service({
+        url: 'admin/adminUser/auth_access/9',
+        method: 'post',
+        data:data
+    })
+}
+export const EditEmi = (data) => {
+    return service({
+        url: 'admin/adminUser/changeExpress',
+        method: 'post',
+        data:data
+    })
+}
+export const GetInfo = () => {
+    return service({
+        url: 'expressDelivery/expressDeliveryConfig/selectInf',
+        method: 'get'
+
+    })
+}
+
 
 
 // initdata
