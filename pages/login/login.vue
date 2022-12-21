@@ -112,6 +112,8 @@ const login=async()=>
                 Toast.value.show(options)
                 localStorage.setItem("token",resp.data.token)
                 localStorage.setItem("username",resp.data.user.name)
+                localStorage.setItem("account",loginform.value.account)
+
                 uni.reLaunch({
                     url: '/pages/my/my'
                 });

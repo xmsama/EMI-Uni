@@ -8,7 +8,7 @@
                             <u--image :showLoading="true" height="30px" width="30px" src="/static/sendji.png"></u--image>
                         </u-col>
                         <u-col :span="10" :offset="1">
-                            <p><span style="font-weight: 800">默认寄件人</span><span style="font-weight: 500"> 13412345678</span></p>
+                            <p><span style="font-weight: 800">默认寄件人</span><span style="font-weight: 500"> {{packform.senderPhone}}</span></p>
                             <p class="addressinfo" style="font-size:15px">
                             <u--textarea  border="bottom" v-model="packform.senderAddress" placeholder="请输入地址" ></u--textarea>
                             </p>
@@ -156,7 +156,7 @@ if (username=="" ||username==undefined){
 }
 const packform=ref({
     senderName:"默认寄件人",
-    senderPhone:"13412345678",
+    senderPhone:localStorage.getItem("account"),
     senderAddress:'',
     addresseeName:"默认收件人",
     addresseePhone:"13587654321",
