@@ -100,10 +100,7 @@ const init=async()=>{
     }
     console.log(IDList.value)
     columns.value[0]=temp
-    // console.log(columns)
 
-
-    // columns.value=await GetSite()
 }
 init()
 const cancelfukuan =(val)=>

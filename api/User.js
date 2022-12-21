@@ -71,20 +71,21 @@ export const QueryEmi = (data) => {
         data:data
     })
 }
+export const QueryEmiAdmin = (data) => {
+    return service({
+        url: 'admin/adminUser/checkOneById',
+        method: 'post',
+        data:data
+    })
+}
 export const AcceptEmi = (data) => {
     return service({
-        url: 'admin/adminUser/auth_access/1',
-        method: 'post',
+        url: 'admin/adminUser/auth_access',
+        method: 'put',
         data:data
     })
 }
-export const UnAcceptEmi = (data) => {
-    return service({
-        url: 'admin/adminUser/auth_access/9',
-        method: 'post',
-        data:data
-    })
-}
+
 export const EditEmi = (data) => {
     return service({
         url: 'admin/adminUser/changeExpress',

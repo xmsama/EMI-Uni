@@ -11,15 +11,22 @@
             <view class="fui-section__title">运单详情</view>
 
             <fui-card :src="src" title="运单号:" :tag="queryid" >
-                <view class="fui-card__content" style="padding:1em">
+                <view class="fui-card__content" style="padding:1em;font-size:15px">
                     <p> 寄件人姓名：{{EmiInfo.senderName}}</p>
                     <p> 寄件人地址：{{EmiInfo.senderAddress}}</p>
                     <p> 寄件人电话：{{EmiInfo.senderPhone}}</p>
                     <p> 收件人姓名：{{EmiInfo.addresseeName}}</p>
                     <p> 收件人地址：{{EmiInfo.addresseeAddress}}</p>
                     <p> 收件人电话：{{EmiInfo.addresseePhone}}</p>
+                    <br>
 <!--                    <p> 当前状态:</p>-->
+                    仅显示最后两条记录
                 </view>
+
+                <u-steps :current="jsonstr.length-1" >
+                    <u-steps-item v-for="(item,index) in jsonstr" :error="item.status=='快递状态异常' || item.status=='拒收'" :title="showtext(item)" :desc="formattedDate(item.date)"/>
+                </u-steps>
+                <br>
             </fui-card>
 
 
@@ -46,7 +53,7 @@
 
             </fui-list-cell>
 
-            <fui-input :padding="['20rpx','32rpx']" :label="TypeText" clearable :bottomLeft="0" placeholder="信息">
+            <fui-input :padding="['20rpx','32rpx']" v-model="TypeText" clearable :bottomLeft="0" placeholder="信息">
                 <fui-button type="gray" bold width="200rpx" height="64rpx" @tap="confrimedit" :size="28" text="提交"></fui-button>
             </fui-input>
 
@@ -59,10 +66,19 @@
 </template>
 
 <script setup>
+import fuiDropdownMenu from "@/components/firstui/fui-dropdown-menu/fui-dropdown-menu.vue"
+import fuiListCell from "@/components/firstui/fui-list-cell/fui-list-cell.vue"
+
+import fuiInput from "@/components/firstui/fui-input/fui-input.vue"
+import fuiButton from "@/components/firstui/fui-button/fui-button.vue"
+import fuiIcon from "@/components/firstui/fui-icon/fui-icon.vue"
+import {AcceptEmi, EditEmi, GetSite, QueryEmi} from "../../../api/User";
+
 import fuiCard from "@/components/firstui/fui-card/fui-card.vue"
 import Admintab from "../../../components/tab/admintab";
 import fuiToast from "@/components/firstui/fui-toast/fui-toast.vue"
 import {ref} from "vue";
+const jsonstr=ref([])
 const TypeText=ref("")
 const queryid=ref("")
 const showsite = ref(false)
@@ -70,6 +86,16 @@ const showedit = ref(false)
 const editype=ref(0)
 const siteid=ref(0)
 const Toast = ref(null)
+const IDList=ref({})
+const showtext =(item)=>{
+    if(item.where!="null" && item.where!="")
+    {
+        return item.where
+    }
+    else {
+        return item.status
+    }
+}
 const columnsedit=ref([
     ['拒绝揽收', '同意揽收', '站点收入',"运往下一个站点","异常","派件中","签收"]
 ])
@@ -89,33 +115,68 @@ const EmiInfo=ref({
 let options = {}
 const confrimedit=async()=>{
     let editypee=editype.value
-    if (editypee==1)
+    if (editypee==0){
+        const resp=await AcceptEmi({deliveryId:queryid.value,id:9})
+    }
+    else if (editypee==1)
     {
-        const resp=await AcceptEmi({deliveryId:queryid})
+        const resp=await AcceptEmi({deliveryId:queryid.value,id:1})
     } else if(editypee==2){
-        const resp=await  EditEmi({expressId:queryid,status:editypee,location:columnssite[0][siteid]+"收入"})
+        const resp=await  EditEmi({expressId:queryid.value,status:editypee,location:columnssite.value[0][siteid.value]+"收入"})
     } else if(editypee==3){
-        const resp=await  EditEmi({expressId:queryid,status:editypee,location:"发往:"+columnssite[0][siteid]})
+        const resp=await  EditEmi({expressId:queryid.value,status:editypee,location:"快递发往"+columnssite.value[0][siteid.value]})
     } else if(editypee==4){
-        const resp=await  EditEmi({expressId:queryid,status:editypee,location:TypeText.value})
+        console.log(TypeText.value)
+        const resp=await  EditEmi({expressId:queryid.value,status:editypee,location:TypeText.value})
     } else if(editypee==5){
-        const resp=await  EditEmi({expressId:queryid,status:editypee,location:"派件中"})
+        const resp=await  EditEmi({expressId:queryid.value,status:editypee,location:"派件中"})
     } else if(editypee==6){
-        const resp=await  EditEmi({expressId:queryid,status:editypee,location:"签收"})
+        const resp=await  EditEmi({expressId:queryid.value,status:editypee,location:"签收"})
     }
     options.text = '操作成功';
     Toast.value.show(options)
+    await query()
 }
 
 
+const formattedDate = timestamp => {
+    const date = new Date(timestamp * 1000);
+    const year = date.getFullYear();
+    const month = date.getMonth() + 1; // getMonth 返回的月份从 0 开始，所以要加 1
+    const day = date.getDate();
+    const hours = date.getHours();
+    const minutes = date.getMinutes();
+    const seconds = date.getSeconds();
+
+    // 使用字符串模板的方式将日期部分的值组合在一起
+    return `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
+}
 const query=async()=>{
     const resp=await QueryEmi({expressId:queryid.value})
     console.log(resp)
     EmiInfo.value=resp.data
+    jsonstr.value=JSON.parse(resp.data.deliveryMessage)
+    // if(jsonstr.value.length>4){
+        jsonstr.value= jsonstr.value.slice(-2);
+    // }
+
     //1605174572245774337
 }
 
+const init=async()=>{
+    const resp=await GetSite()
 
+    let temp=Array()
+    for(let i=0;i<resp.data.length;i++) {
+
+        // IDList.value[resp.data[i].stationName]=resp.data[i].expressId
+        temp.push(resp.data[i].stationName)
+    }
+    console.log(IDList.value)
+    columnssite.value[0]=temp
+
+}
+init()
 
 const canceledit =(val)=>
 {
@@ -138,15 +199,7 @@ const confirmsite=(val)=>
     showsite.value=false
 }
 
-import fuiDropdownMenu from "@/components/firstui/fui-dropdown-menu/fui-dropdown-menu.vue"
-import fuiListCell from "@/components/firstui/fui-list-cell/fui-list-cell.vue"
 
-import fuiInput from "@/components/firstui/fui-input/fui-input.vue"
-import fuiButton from "@/components/firstui/fui-button/fui-button.vue"
-import fuiIcon from "@/components/firstui/fui-icon/fui-icon.vue"
-import {AcceptEmi, EditEmi, GetEmi, QueryEmi} from "../../../api/User";
-// dref.show()
-// console.log(ddref.show())
 
 
 
