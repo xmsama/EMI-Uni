@@ -3,9 +3,9 @@
 		<view class="top"></view>
 		<view class="content">
 			<view class="title">欢迎登录芜湖快递</view>
-			<input class="u-border-bottom" type="number" v-model="loginform.account" placeholder="请输入手机号" />
+			<input class="u-border-bottom"  v-model="loginform.account" placeholder="请输入手机号" />
             <view class="tips">未注册的手机号验证后自动创建账号</view>
-            <input class="u-border-bottom" type="number" v-model="loginform.password" placeholder="请输入密码" />
+            <input class="u-border-bottom" type="password" v-model="loginform.password" placeholder="请输入密码" />
 <!--            <view class="tips">未注册的手机号验证后自动创建账号</view>-->
             <view>&nbsp;</view>
 <!--            <u-button  @tap="submit" type="warning" text="登录" size="large"></u-button>-->
@@ -53,7 +53,7 @@ if (username!="" && username!=undefined){
     })
 }
 const loginform=ref({
-    account:'13311111111',
+    account:'',
     password:''
 })
 
@@ -63,7 +63,7 @@ const loginform=ref({
 const loginadmin =async()=>
 {
     let options = {}
-    const resp=await LoginAdmin({account:"admin",password:"123"})
+    const resp=await LoginAdmin({...loginform.value})
     console.log(resp)
     if (resp.code==200){
         options.text = '登录成功';
@@ -73,6 +73,9 @@ const loginadmin =async()=>
         uni.reLaunch({
             url: '/pages/my/my'
         });
+    }else{
+        options.text = '登录失败 请检查账号密码是否正确';
+        Toast.value.show(options)
     }
 }
 const login=async()=>

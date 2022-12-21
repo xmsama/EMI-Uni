@@ -66,8 +66,10 @@ const EmiInfo=ref({
 })
 const init =async()=>{
     const resp=await QueryEmi({expressId:route.query.id})
-    EmiInfo.value=resp.data
-    jsonstr.value=JSON.parse(resp.data.deliveryMessage)
+    if (resp.data!=null){
+        EmiInfo.value=resp.data
+        jsonstr.value=JSON.parse(resp.data.deliveryMessage)
+    }
 }
 init()
 

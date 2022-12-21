@@ -36,6 +36,7 @@
 </template>
 
 <script setup>
+
 import fuiToast from "@/components/firstui/fui-toast/fui-toast.vue"
 import Admintab from "../../../components/tab/admintab";
 import fuiDropdownMenu from "@/components/firstui/fui-dropdown-menu/fui-dropdown-menu.vue"
